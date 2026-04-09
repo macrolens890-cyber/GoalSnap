@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoalSnap — شاهد المباريات مباشرة وملخصات الأهداف</title>
+<meta name="description" content="تطبيق GoalSnap لمشاهدة المباريات مباشرة وملخصات الأهداف. بث مباشر، ملخصات يومية، وأقل إعلانات ممكنة.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#060a10;
+  --bg2:#0d1219;
+  --card:#131a26;
+  --border:#1e2a3a;
+  --green:#00e676;
+  --green-glow:rgba(0,230,118,0.15);
+  --red:#e53935;
+  --text:#ffffff;
+  --text2:#8892a8;
+  --text3:#4a5568;
+  --font:'Cairo','Tajawal',sans-serif;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ═══ HERO ═══ */
+.hero{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero::before{
+  content:'';
+  position:absolute;
+  top:-50%;left:-50%;
+  width:200%;height:200%;
+  background:radial-gradient(circle at 30% 40%,rgba(0,230,118,0.06) 0%,transparent 50%),
+             radial-gradient(circle at 70% 60%,rgba(229,57,53,0.04) 0%,transparent 50%);
+  animation:drift 20s ease-in-out infinite;
+}
+
+@keyframes drift{
+  0%,100%{transform:translate(0,0) rotate(0deg)}
+  33%{transform:translate(2%,-2%) rotate(1deg)}
+  66%{transform:translate(-1%,1%) rotate(-0.5deg)}
+}
+
+.hero-content{
+  position:relative;z-index:2;
+  text-align:center;
+  padding:40px 24px;
+  max-width:720px;
+}
+
+.logo-container{
+  width:120px;height:120px;
+  margin:0 auto 32px;
+  border-radius:32px;
+  background:linear-gradient(135deg,var(--green-glow),rgba(229,57,53,0.1));
+  border:2px solid rgba(0,230,118,0.2);
+  display:flex;align-items:center;justify-content:center;
+  animation:float 4s ease-in-out infinite;
+  position:relative;
+}
+
+.logo-container::after{
+  content:'';position:absolute;inset:-8px;
+  border-radius:36px;
+  background:linear-gradient(135deg,rgba(0,230,118,0.1),transparent);
+  filter:blur(20px);z-index:-1;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+}
+
+.logo-container svg{width:64px;height:64px}
+
+.hero h1{
+  font-size:clamp(2.2rem,6vw,3.5rem);
+  font-weight:900;
+  line-height:1.2;
+  margin-bottom:12px;
+  background:linear-gradient(135deg,#fff 40%,var(--green));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.hero .subtitle{
+  font-size:clamp(1rem,2.5vw,1.25rem);
+  color:var(--text2);
+  line-height:1.8;
+  margin-bottom:40px;
+  max-width:500px;
+  margin-left:auto;margin-right:auto;
+}
+
+.cta-group{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  align-items:center;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:16px 36px;
+  border-radius:14px;
+  font-family:var(--font);
+  font-size:1.05rem;
+  font-weight:700;
+  text-decoration:none;
+  transition:all 0.3s ease;
+  cursor:pointer;
+  border:none;
+}
+
+.btn-primary{
+  background:var(--green);
+  color:var(--bg);
+  box-shadow:0 8px 32px rgba(0,230,118,0.25);
+}
+
+.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 40px rgba(0,230,118,0.35);
+}
+
+.btn-secondary{
+  background:transparent;
+  color:var(--green);
+  border:2px solid rgba(0,230,118,0.25);
+}
+
+.btn-secondary:hover{
+  background:var(--green-glow);
+  border-color:rgba(0,230,118,0.4);
+}
+
+.btn svg{width:22px;height:22px;flex-shrink:0}
+
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 18px;
+  background:rgba(229,57,53,0.1);
+  border:1px solid rgba(229,57,53,0.2);
+  border-radius:50px;
+  font-size:0.85rem;
+  color:var(--red);
+  font-weight:600;
+  margin-bottom:28px;
+  animation:pulse-badge 2s ease-in-out infinite;
+}
+
+@keyframes pulse-badge{
+  0%,100%{opacity:1}
+  50%{opacity:0.7}
+}
+
+.hero-badge .dot{
+  width:8px;height:8px;
+  background:var(--red);
+  border-radius:50%;
+}
+
+/* ═══ FEATURES ═══ */
+.features{
+  padding:80px 24px;
+  max-width:1100px;
+  margin:0 auto;
+}
+
+.section-title{
+  text-align:center;
+  font-size:clamp(1.6rem,4vw,2.2rem);
+  font-weight:800;
+  margin-bottom:12px;
+}
+
+.section-subtitle{
+  text-align:center;
+  color:var(--text2);
+  font-size:1rem;
+  margin-bottom:48px;
+}
+
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:20px;
+}
+
+.feature-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:32px 28px;
+  transition:all 0.3s ease;
+  position:relative;
+  overflow:hidden;
+}
+
+.feature-card::before{
+  content:'';
+  position:absolute;
+  top:0;right:0;
+  width:100px;height:100px;
+  background:radial-gradient(circle,var(--green-glow),transparent);
+  opacity:0;
+  transition:opacity 0.3s;
+}
+
+.feature-card:hover::before{opacity:1}
+
+.feature-card:hover{
+  border-color:rgba(0,230,118,0.2);
+  transform:translateY(-4px);
+}
+
+.feature-icon{
+  width:52px;height:52px;
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:18px;
+  font-size:1.5rem;
+}
+
+.feature-icon.green{background:var(--green-glow);color:var(--green)}
+.feature-icon.red{background:rgba(229,57,53,0.12);color:var(--red)}
+.feature-icon.blue{background:rgba(41,121,255,0.12);color:#2979ff}
+.feature-icon.orange{background:rgba(255,152,0,0.12);color:#ff9800}
+
+.feature-card h3{
+  font-size:1.15rem;
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.feature-card p{
+  color:var(--text2);
+  font-size:0.92rem;
+  line-height:1.7;
+}
+
+/* ═══ SCREENSHOTS ═══ */
+.screenshots{
+  padding:60px 24px 80px;
+  text-align:center;
+}
+
+.screenshots-scroll{
+  display:flex;
+  gap:20px;
+  overflow-x:auto;
+  padding:20px 0;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.screenshot-placeholder{
+  width:200px;height:400px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:24px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--text3);
+  font-size:0.85rem;
+  position:relative;
+  overflow:hidden;
+}
+
+.screenshot-placeholder::before{
+  content:'';position:absolute;top:0;left:0;right:0;
+  height:28px;background:var(--bg2);
+  border-radius:24px 24px 0 0;
+  border-bottom:1px solid var(--border);
+}
+
+/* ═══ HOW IT WORKS ═══ */
+.how-it-works{
+  padding:60px 24px 80px;
+  max-width:800px;
+  margin:0 auto;
+}
+
+.steps{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+
+.step{
+  display:flex;
+  gap:20px;
+  align-items:flex-start;
+  padding:24px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  transition:all 0.3s;
+}
+
+.step:hover{border-color:rgba(0,230,118,0.2)}
+
+.step-num{
+  width:44px;height:44px;
+  border-radius:12px;
+  background:var(--green-glow);
+  border:1px solid rgba(0,230,118,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;font-weight:800;
+  color:var(--green);
+  flex-shrink:0;
+}
+
+.step h4{font-size:1.05rem;font-weight:700;margin-bottom:4px}
+.step p{color:var(--text2);font-size:0.9rem;line-height:1.6}
+
+/* ═══ CTA BOTTOM ═══ */
+.cta-bottom{
+  padding:80px 24px;
+  text-align:center;
+  position:relative;
+}
+
+.cta-bottom::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent,rgba(0,230,118,0.03),transparent);
+}
+
+.cta-bottom .inner{
+  position:relative;z-index:2;
+  max-width:600px;margin:0 auto;
+}
+
+.cta-bottom h2{
+  font-size:clamp(1.5rem,4vw,2rem);
+  font-weight:800;
+  margin-bottom:16px;
+}
+
+.cta-bottom p{
+  color:var(--text2);
+  margin-bottom:32px;
+  font-size:1rem;
+}
+
+/* ═══ FOOTER ═══ */
+footer{
+  padding:32px 24px;
+  text-align:center;
+  border-top:1px solid var(--border);
+  color:var(--text3);
+  font-size:0.85rem;
+}
+
+footer a{color:var(--text2);text-decoration:none}
+footer a:hover{color:var(--green)}
+
+.social-links{
+  display:flex;
+  justify-content:center;
+  gap:16px;
+  margin-bottom:16px;
+}
+
+.social-links a{
+  width:44px;height:44px;
+  border-radius:12px;
+  background:var(--card);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+  color:var(--text2);
+  font-size:1.2rem;
+}
+
+.social-links a:hover{
+  border-color:var(--green);
+  color:var(--green);
+  background:var(--green-glow);
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:640px){
+  .hero-content{padding:32px 20px}
+  .features-grid{grid-template-columns:1fr}
+  .screenshots-scroll{justify-content:flex-start;padding-right:20px}
+  .btn{width:100%;justify-content:center}
+}
+
+/* ═══ ANIMATIONS ═══ */
+.fade-up{
+  opacity:0;transform:translateY(30px);
+  transition:all 0.6s ease;
+}
+
+.fade-up.visible{
+  opacity:1;transform:translateY(0);
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      بث مباشر الآن
+    </div>
+
+    <div class="logo-container">
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="28" stroke="#00e676" stroke-width="2.5" fill="none"/>
+        <path d="M32 8 L36 20 L32 16 L28 20 Z" fill="#00e676" opacity="0.6"/>
+        <path d="M32 56 L28 44 L32 48 L36 44 Z" fill="#00e676" opacity="0.6"/>
+        <path d="M8 32 L20 28 L16 32 L20 36 Z" fill="#00e676" opacity="0.6"/>
+        <path d="M56 32 L44 36 L48 32 L44 28 Z" fill="#00e676" opacity="0.6"/>
+        <circle cx="32" cy="32" r="10" stroke="#00e676" stroke-width="2" fill="rgba(0,230,118,0.1)"/>
+        <circle cx="32" cy="32" r="3" fill="#00e676"/>
+      </svg>
+    </div>
+
+    <h1>GoalSnap</h1>
+    <p class="subtitle">
+      شاهد المباريات مباشرة وملخصات الأهداف — بدون إعلانات مزعجة، بدون اشتراكات
+    </p>
+
+    <div class="cta-group">
+      <a href="https://t.me/goalsnap1" class="btn btn-primary" id="downloadBtn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7 7-7Z"/></svg>
+        تحميل التطبيق (APK)
+      </a>
+      <a href="https://t.me/goalsnap1" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        قناة التليجرام
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES ═══ -->
+<section class="features" id="features">
+  <h2 class="section-title fade-up">ليه GoalSnap؟</h2>
+  <p class="section-subtitle fade-up">كل اللي محتاجه لمتابعة الكورة في مكان واحد</p>
+
+  <div class="features-grid">
+    <div class="feature-card fade-up">
+      <div class="feature-icon red">⚡</div>
+      <h3>بث مباشر</h3>
+      <p>تابع المباريات لحظة بلحظة بجودة عالية من مصادر متعددة — اختار السيرفر اللي يناسبك</p>
+    </div>
+
+    <div class="feature-card fade-up">
+      <div class="feature-icon green">⚽</div>
+      <h3>ملخصات وأهداف</h3>
+      <p>شاهد ملخصات المباريات مع أزرار تنقلك لكل هدف مباشرة — متفوتش أي لحظة مهمة</p>
+    </div>
+
+    <div class="feature-card fade-up">
+      <div class="feature-icon blue">📅</div>
+      <h3>تقويم ذكي</h3>
+      <p>تقويم شهري يوريك الأيام اللي فيها ملخصات — اضغط على أي يوم وشاهد كل المباريات</p>
+    </div>
+
+    <div class="feature-card fade-up">
+      <div class="feature-icon orange">🛡️</div>
+      <h3>بدون إعلانات مزعجة</h3>
+      <p>3 إعلانات فقط في اليوم كله — بدون pop-ups، بدون إعلانات منبثقة، تجربة مشاهدة مريحة</p>
+    </div>
+
+    <div class="feature-card fade-up">
+      <div class="feature-icon green">🔄</div>
+      <h3>سيرفرات متعددة</h3>
+      <p>لو سيرفر مشتغلش، فيه سيرفرات تانية — دايماً هتلاقي بث شغال</p>
+    </div>
+
+    <div class="feature-card fade-up">
+      <div class="feature-icon red">📱</div>
+      <h3>خفيف وسريع</h3>
+      <p>حجم التطبيق صغير ومش بيستهلك بطارية — مصمم للموبايل بشكل مثالي</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section class="how-it-works" id="how">
+  <h2 class="section-title fade-up">إزاي تبدأ؟</h2>
+  <p class="section-subtitle fade-up">3 خطوات بس</p>
+
+  <div class="steps">
+    <div class="step fade-up">
+      <div class="step-num">١</div>
+      <div>
+        <h4>حمّل التطبيق</h4>
+        <p>حمّل الـ APK من قناة التليجرام وسطّبه على موبايلك</p>
+      </div>
+    </div>
+    <div class="step fade-up">
+      <div class="step-num">٢</div>
+      <div>
+        <h4>حمّل تطبيق Matchify</h4>
+        <p>حمّل تطبيق Matchify من جوجل بلاي — ده مطلوب عشان التطبيق يشتغل بشكل كامل</p>
+      </div>
+    </div>
+    <div class="step fade-up">
+      <div class="step-num">٣</div>
+      <div>
+        <h4>شاهد واستمتع!</h4>
+        <p>افتح التطبيق وشاهد المباريات مباشرة أو ملخصات الأهداف — كل حاجة جاهزة</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA BOTTOM ═══ -->
+<section class="cta-bottom">
+  <div class="inner fade-up">
+    <h2>جاهز تشوف الكورة بشكل مختلف؟</h2>
+    <p>حمّل GoalSnap دلوقتي وابدأ تتابع المباريات مباشرة والملخصات بجودة عالية</p>
+    <a href="https://t.me/goalsnap1" class="btn btn-primary" style="display:inline-flex">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7 7-7Z"/></svg>
+      حمّل الآن مجاناً
+    </a>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="social-links">
+    <a href="https://t.me/goalsnap1" title="تليجرام">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+    </a>
+    <a href="https://www.facebook.com/GoalSnap1/" title="فيسبوك">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    </a>
+    <a href="https://www.youtube.com/@GoalSnap890" title="يوتيوب">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><polygon points="9.545,15.568 15.818,12 9.545,8.432" fill="#0d1117"/></svg>
+    </a>
+  </div>
+  <p>GoalSnap © 2026 — جميع الحقوق محفوظة</p>
+</footer>
+
+<script>
+// Scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
